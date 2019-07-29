@@ -1,8 +1,8 @@
 # ansible-fast-data-transfer
 Ansible role to copy files using [FDT](https://fast-data-transfer.github.io)
 
-Copies data quickly between two machines using https://github.com/fast-data-transfer/fdt.
 Requires Java (installed by the role). Tested on Ubuntu 18.04.
+
 Data is *not* encrypted, *no* authentification is done (though access is restricted to the IP address of the source machine).
 
 ## Usage
