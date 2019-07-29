@@ -1,9 +1,11 @@
-# ansible-fast-data-transfer
 Ansible role to copy files using [FDT](https://fast-data-transfer.github.io)
+
+>FDT is an Application for Efficient Data Transfers which is capable of reading and writing at disk speed over wide area networks (with standard TCP). It is written in Java, runs an all major platforms and it is easy to use. FDT is based on an asynchronous, flexible multithreaded system and is using the capabilities of the Java NIO libraries.
 
 Requires Java (installed by the role). Tested on Ubuntu 18.04.
 
 Data is *not* encrypted, *no* authentification is done (though access is restricted to the IP address of the source machine).
+
 
 ## Usage
 
