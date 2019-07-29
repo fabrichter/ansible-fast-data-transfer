@@ -2,7 +2,7 @@
 - name: "Push data (fdt_source to host / host to fdt_target)" 
   vars:
     # client sends data
-    fdt_client: "{{ fdt_source is defined | ternary(fdt_soure, inventory_hostname) }}"
+    fdt_client: "{{ fdt_source is defined | ternary(fdt_source, inventory_hostname) }}"
     # server receives data
     fdt_server: "{{ fdt_source is defined | ternary(inventory_hostname, fdt_target) }}"
   block:
@@ -14,6 +14,12 @@
       file: setup.yml
       apply:
         delegate_to: "{{ fdt_client }}"
+
+  - name: "Fetch IP address of client"
+    setup:
+      gather_subset: network
+    delegate_to: "{{ fdt_client }}"
+    delegate_facts: true
 
   - name: "Start FDT server"
     command: |
