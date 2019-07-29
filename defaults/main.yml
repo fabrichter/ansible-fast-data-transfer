@@ -1,0 +1,11 @@
+---
+fdt_version: 0.26.1
+fdt_release_base_url: https://github.com/fast-data-transfer/fdt/releases/download/
+fdt_release_checksum: sha256:fe40fdefd3e48139f6ea5f3738390b5b0e0da948706642fa4e0b88528f39da33
+fdt_jar_location: /usr/local/bin/ansible-fdt.jar
+fdt_max_transfer_time: 600
+fdt_poll_time: 10
+fdt_io_buffer_size: 64M
+fdt_tcp_buffer_size: 1M
+fdt_tcp_streams: 10
+...

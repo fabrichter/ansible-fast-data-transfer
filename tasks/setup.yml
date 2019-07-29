@@ -1,0 +1,16 @@
+---
+- name: "Setup"
+  tags: fdt_setup
+  block:
+  - name: "Download FDT"
+    get_url:
+      url: "{{ fdt_release_base_url }}{{ fdt_version }}/fdt.jar"
+      dest: "{{ fdt_jar_location }}"
+      checksum: "{{ fdt_release_checksum }}"
+      mode: 0444
+  - name: "Install Java"
+    tags: fdt_java
+    package:
+      name: default-jre-headless
+      state: present
+...

@@ -1,0 +1,54 @@
+---
+- name: "Push data (fdt_source to host / host to fdt_target)" 
+  vars:
+    # client sends data
+    fdt_client: "{{ fdt_source is defined | ternary(fdt_soure, inventory_hostname) }}"
+    # server receives data
+    fdt_server: "{{ fdt_source is defined | ternary(inventory_hostname, fdt_target) }}"
+  block:
+  - include_tasks:
+      file: setup.yml
+      apply:
+        delegate_to: "{{ fdt_server }}"
+  - include_tasks:
+      file: setup.yml
+      apply:
+        delegate_to: "{{ fdt_client }}"
+
+  - name: "Start FDT server"
+    command: |
+      java -jar {{ fdt_jar_location }} 
+      -bs {{ fdt_io_buffer_size }}
+      -S -f {{ hostvars[fdt_client]['ansible_default_ipv4']['address'] }}
+    async: "{{ fdt_max_transfer_time }}"
+    poll: 0
+    delegate_to: "{{ fdt_server }}"
+    register: fdt_transfer_job
+
+  - name: "Fetch IP address of server"
+    setup:
+      gather_subset: network
+    delegate_to: "{{ fdt_server }}"
+    delegate_facts: true
+
+  # TODO: support list of files
+  - name: "Start FDT client"
+    command: |
+      java -jar {{ fdt_jar_location }} 
+      -c {{ hostvars[fdt_server]['ansible_default_ipv4']['address'] }} 
+      -ss {{ fdt_tcp_buffer_size }}
+      -P {{ fdt_tcp_streams }}
+      -d {{ fdt_dest }}
+      {{ fdt_path }}
+    async: "{{ fdt_max_transfer_time }}"
+    poll: "{{ fdt_poll_time }}"
+    delegate_to: "{{ fdt_client }}"
+
+  - name: "Wait for transfer to finish"
+    async_status:
+      jid: "{{ fdt_transfer_job.ansible_job_id }}"
+    delegate_to: "{{ fdt_server }}"
+    register: fdt_transfer_result
+    until: fdt_transfer_result.finished
+    retries: 10
+...
