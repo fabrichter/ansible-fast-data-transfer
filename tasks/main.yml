@@ -37,6 +37,14 @@
     delegate_to: "{{ fdt_server }}"
     delegate_facts: true
 
+  # TODO: make port variable
+  - name: "Wait for server to start"
+    wait_for:
+      state: started
+      port: 54321
+      delay: 3
+    delegate_to: "{{ fdt_server }}"
+
   # TODO: support list of files
   - name: "Start FDT client"
     command: |
